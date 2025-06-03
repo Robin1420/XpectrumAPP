@@ -7,7 +7,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.Response
 
-// Modelo de datos para la respuesta de tu API
+// Modelo de datos para la respuesta de boletos
 data class BoletoResponse(
     val boletoid: Int,
     val reservaid: Int,
@@ -18,7 +18,7 @@ data class BoletoResponse(
     val checkins: String?
 )
 
-// Interfaz API actualizada para tu endpoint
+// Interfaz API para boletos
 interface ApiService {
     @GET("boletos/searchbycodigo/{codigo}")
     suspend fun obtenerBoleto(@Path("codigo") codigo: String): Response<List<BoletoResponse>>
@@ -30,7 +30,7 @@ class LectorQR {
     init {
         // Configurar Retrofit con tu API real
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://apiswagger.somee.com/api/") // Tu URL base
+            .baseUrl("http://apiswagger.somee.com/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 

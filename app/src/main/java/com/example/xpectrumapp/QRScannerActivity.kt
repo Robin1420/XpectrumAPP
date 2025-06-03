@@ -1,7 +1,6 @@
 package com.example.xpectrumapp
 
 import android.Manifest
-import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -9,6 +8,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.xpectrumapp.logic.BoletoResponse
@@ -21,43 +21,84 @@ import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MainActivity : Activity() {
+class QRScannerActivity : AppCompatActivity() {
 
     private lateinit var lectorQR: LectorQR
     private lateinit var btnEscanear: Button
+    private lateinit var btnVolver: Button
     private lateinit var tvResultado: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         try {
-            Log.d("MainActivity", "Iniciando onCreate")
-            setContentView(R.layout.activity_main)
+            Log.d("QRScannerActivity", "Iniciando onCreate")
+            setContentView(R.layout.activity_qr_scanner)
+
+            // Configurar ActionBar
+            supportActionBar?.title = "Escáner QR"
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
             // Inicializar vistas
             btnEscanear = findViewById(R.id.btnEscanear)
+            btnVolver = findViewById(R.id.btnVolver)
             tvResultado = findViewById(R.id.tvResultado)
 
             // Inicializar lógica de negocio
             lectorQR = LectorQR()
 
-            // Configurar botón de escaneo
-            btnEscanear.setOnClickListener {
-                if (tienePermisoCamara()) {
-                    iniciarEscaneoQR()
-                } else {
-                    solicitarPermisoCamara()
-                }
-            }
+            // Configurar botones
+            setupClickListeners()
 
-            // Mensaje inicial
-            tvResultado.text = "Presiona el botón para escanear un código QR de boleto"
+            // Mostrar información del vuelo si viene de la lista
+            mostrarInformacionVuelo()
 
-            Log.d("MainActivity", "onCreate completado exitosamente")
+            Log.d("QRScannerActivity", "onCreate completado exitosamente")
 
         } catch (e: Exception) {
-            Log.e("MainActivity", "Error en onCreate", e)
+            Log.e("QRScannerActivity", "Error en onCreate", e)
             Toast.makeText(this, "Error al inicializar la aplicación", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun mostrarInformacionVuelo() {
+        val destino = intent.getStringExtra("DESTINO")
+        val fechaViaje = intent.getStringExtra("FECHA_VIAJE")
+        val tipoViaje = intent.getStringExtra("TIPO_VIAJE")
+        val clase = intent.getStringExtra("CLASE")
+        val precioUsd = intent.getDoubleExtra("PRECIO_USD", 0.0)
+        val precioPen = intent.getDoubleExtra("PRECIO_PEN", 0.0)
+
+        if (destino != null) {
+            val infoVuelo = """
+                ✈️ INFORMACIÓN DEL VUELO SELECCIONADO
+                
+                🎯 Destino: $destino
+                📅 Fecha: ${fechaViaje ?: "No especificada"}
+                👤 Tipo: ${tipoViaje?.trim() ?: "No especificado"}
+                🎫 Clase: ${clase ?: "No especificada"}
+                💰 Precio: USD ${String.format("%.2f", precioUsd)} / PEN ${String.format("%.2f", precioPen)}
+                
+                📱 Presiona SCAN para escanear el código QR del boleto
+            """.trimIndent()
+
+            tvResultado.text = infoVuelo
+        } else {
+            tvResultado.text = "📱 Presiona el botón SCAN para escanear un código QR de boleto"
+        }
+    }
+
+    private fun setupClickListeners() {
+        btnEscanear.setOnClickListener {
+            if (tienePermisoCamara()) {
+                iniciarEscaneoQR()
+            } else {
+                solicitarPermisoCamara()
+            }
+        }
+
+        btnVolver.setOnClickListener {
+            finish() // Volver a VuelosActivity
         }
     }
 
@@ -85,7 +126,7 @@ class MainActivity : Activity() {
             integrator.setBeepEnabled(true)
             integrator.initiateScan()
         } catch (e: Exception) {
-            Log.e("MainActivity", "Error al iniciar escaneo QR", e)
+            Log.e("QRScannerActivity", "Error al iniciar escaneo QR", e)
             Toast.makeText(this, "Error al abrir la cámara", Toast.LENGTH_SHORT).show()
         }
     }
@@ -95,6 +136,7 @@ class MainActivity : Activity() {
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == CAMERA_PERMISSION_REQUEST) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 iniciarEscaneoQR()
@@ -110,10 +152,10 @@ class MainActivity : Activity() {
         if (result != null) {
             if (result.contents != null) {
                 val codigoQR = result.contents
-                Log.d("MainActivity", "Código QR escaneado: $codigoQR")
+                Log.d("QRScannerActivity", "Código QR escaneado: $codigoQR")
 
                 // Mostrar mensaje de carga
-                tvResultado.text = "Código escaneado: $codigoQR\n\nConsultando información del boleto..."
+                tvResultado.text = "📱 Código escaneado: $codigoQR\n\n🔍 Consultando información del boleto..."
 
                 // Consultar la API con el código
                 consultarAPI(codigoQR)
@@ -126,7 +168,6 @@ class MainActivity : Activity() {
     }
 
     private fun consultarAPI(codigo: String) {
-        // Usamos CoroutineScope en lugar de lifecycleScope
         CoroutineScope(Dispatchers.Main).launch {
             try {
                 val boleto = withContext(Dispatchers.IO) {
@@ -137,23 +178,25 @@ class MainActivity : Activity() {
                     mostrarDatosBoleto(boleto)
                 } else {
                     tvResultado.text = """
-                        ❌ Boleto no encontrado
+                        ❌ BOLETO NO ENCONTRADO
                         
-                        Código escaneado: $codigo
+                        📱 Código escaneado: $codigo
                         
-                        El código QR no corresponde a ningún boleto válido en el sistema.
+                        ⚠️ El código QR no corresponde a ningún boleto válido en el sistema.
+                        
+                        💡 Presiona SCAN para intentar nuevamente.
                     """.trimIndent()
                 }
             } catch (e: Exception) {
-                Log.e("MainActivity", "Error en consultarAPI", e)
+                Log.e("QRScannerActivity", "Error en consultarAPI", e)
                 tvResultado.text = """
-                    ❌ Error de conexión
+                    ❌ ERROR DE CONEXIÓN
                     
-                    Código escaneado: $codigo
+                    📱 Código escaneado: $codigo
                     
-                    Error: ${e.message}
+                    🚫 Error: ${e.message}
                     
-                    Verifica tu conexión a internet e intenta nuevamente.
+                    🔄 Verifica tu conexión a internet e intenta nuevamente.
                 """.trimIndent()
             }
         }
@@ -191,18 +234,25 @@ class MainActivity : Activity() {
             "✅ Boleto válido y listo para usar"
         else
             "⚠️ Verificar estado del boleto"}
+            
+            💡 Presiona SCAN para escanear otro boleto.
         """.trimIndent()
 
         tvResultado.text = resultado
 
         // Mostrar toast con el resultado
         val mensaje = when (boleto.estadoboleto.lowercase()) {
-            "emitido" -> "Boleto válido encontrado"
-            "cancelado" -> "Boleto cancelado"
-            "usado" -> "Boleto ya utilizado"
-            else -> "Boleto encontrado"
+            "emitido" -> "✅ Boleto válido encontrado"
+            "cancelado" -> "❌ Boleto cancelado"
+            "usado" -> "🎫 Boleto ya utilizado"
+            else -> "📋 Boleto encontrado"
         }
         Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return true
     }
 
     companion object {

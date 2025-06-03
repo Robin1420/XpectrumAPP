@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GhostTextManager">
+    <option name="inputs">
+      <map>
+        <entry key="hola">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1748986237635" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="holao">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1748986271991" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="que tanto es el alcance que tiene de mi proyecto osea que tanto contexto tiene de el ahora mismo quiero ver que tanto puedes entender y hata donde es tu alcance">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="5.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1748984001616" />
+                  <option value="1748983844020" />
+                  <option value="1748983831077" />
+                  <option value="1748983804840" />
+                  <option value="1748983786810" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
