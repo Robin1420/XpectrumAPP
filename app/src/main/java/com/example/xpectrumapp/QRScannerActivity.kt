@@ -18,8 +18,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.text.SimpleDateFormat
-import java.util.*
 
 class QRScannerActivity : AppCompatActivity() {
 
@@ -98,7 +96,7 @@ class QRScannerActivity : AppCompatActivity() {
         }
 
         btnVolver.setOnClickListener {
-            finish() // Volver a VuelosActivity
+            finish()
         }
     }
 
@@ -175,7 +173,8 @@ class QRScannerActivity : AppCompatActivity() {
                 }
 
                 if (boleto != null) {
-                    mostrarDatosBoleto(boleto)
+                    // Navegar a la nueva pantalla de detalle del boleto
+                    navegarADetalleBoleto(boleto)
                 } else {
                     tvResultado.text = """
                         ❌ BOLETO NO ENCONTRADO
@@ -202,52 +201,15 @@ class QRScannerActivity : AppCompatActivity() {
         }
     }
 
-    private fun mostrarDatosBoleto(boleto: BoletoResponse) {
-        // Formatear la fecha para mostrarla más legible
-        val fechaFormateada = try {
-            val formatoEntrada = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
-            val formatoSalida = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-            val fecha = formatoEntrada.parse(boleto.fechaemision)
-            formatoSalida.format(fecha ?: Date())
-        } catch (e: Exception) {
-            boleto.fechaemision
+    private fun navegarADetalleBoleto(boleto: BoletoResponse) {
+        val intent = Intent(this, BoletoDetailActivity::class.java).apply {
+            putExtra("CODIGO_BOLETO", boleto.codigoboleto)
+            putExtra("BOLETO_ID", boleto.boletoid)
+            putExtra("RESERVA_ID", boleto.reservaid)
+            putExtra("FECHA_EMISION", boleto.fechaemision)
+            putExtra("ESTADO_BOLETO", boleto.estadoboleto)
         }
-
-        // Determinar el emoji según el estado
-        val estadoEmoji = when (boleto.estadoboleto.lowercase()) {
-            "emitido" -> "✅"
-            "cancelado" -> "❌"
-            "usado" -> "🎫"
-            else -> "📋"
-        }
-
-        val resultado = """
-            $estadoEmoji INFORMACIÓN DEL BOLETO
-            
-            🎫 Código: ${boleto.codigoboleto}
-            🆔 ID Boleto: ${boleto.boletoid}
-            🔗 ID Reserva: ${boleto.reservaid}
-            📅 Fecha Emisión: $fechaFormateada
-            📊 Estado: ${boleto.estadoboleto}
-            
-            ${if (boleto.estadoboleto.equals("Emitido", ignoreCase = true))
-            "✅ Boleto válido y listo para usar"
-        else
-            "⚠️ Verificar estado del boleto"}
-            
-            💡 Presiona SCAN para escanear otro boleto.
-        """.trimIndent()
-
-        tvResultado.text = resultado
-
-        // Mostrar toast con el resultado
-        val mensaje = when (boleto.estadoboleto.lowercase()) {
-            "emitido" -> "✅ Boleto válido encontrado"
-            "cancelado" -> "❌ Boleto cancelado"
-            "usado" -> "🎫 Boleto ya utilizado"
-            else -> "📋 Boleto encontrado"
-        }
-        Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show()
+        startActivity(intent)
     }
 
     override fun onSupportNavigateUp(): Boolean {

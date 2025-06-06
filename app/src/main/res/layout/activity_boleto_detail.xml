@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/gradient_background">
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="20dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Detalle del Boleto"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:fontFamily="sans-serif-medium" />
+
+        <TextView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:text="🎫"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
+    <!-- Contenido principal -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Boarding Pass Card -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/boletoContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="8dp"
+                app:cardBackgroundColor="#FFFFFF">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!-- Header azul del boarding pass -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:background="#E5B83E"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="20dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="XPECTRUM ✈"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:textColor="#FFFFFF" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="BOARDING PASS"
+                            android:textSize="12sp"
+                            android:textColor="#FFFFFF"
+                            android:alpha="0.8" />
+
+                    </LinearLayout>
+
+                    <!-- Contenido principal del boleto -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="20dp"
+                        android:background="#F8F9FA">
+
+                        <!-- Lado izquierdo - Código de barras vertical -->
+                        <LinearLayout
+                            android:layout_width="60dp"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:gravity="center">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="|||||\n|||||\n|||||\n|||||\n|||||\n|||||\n|||||\n|||||\n|||||"
+                                android:textSize="8sp"
+                                android:textColor="#000000"
+                                android:lineSpacingExtra="2dp"
+                                android:gravity="center" />
+
+                        </LinearLayout>
+
+                        <!-- Contenido central -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginHorizontal="16dp">
+
+                            <!-- Ícono de avión central -->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="✈️"
+                                android:textSize="32sp"
+                                android:layout_gravity="center"
+                                android:layout_marginBottom="16dp" />
+
+                            <!-- Información del boleto -->
+                            <TextView
+                                android:id="@+id/tvCodigoBoleto"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="ABC123XYZ"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                android:textColor="#2D3748"
+                                android:gravity="center"
+                                android:layout_marginBottom="8dp" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginBottom="4dp">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Boleto:"
+                                    android:textSize="12sp"
+                                    android:textColor="#718096" />
+
+                                <TextView
+                                    android:id="@+id/tvBoletoId"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="ID: 12345"
+                                    android:textSize="12sp"
+                                    android:textColor="#2D3748"
+                                    android:textStyle="bold" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginBottom="4dp">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Reserva:"
+                                    android:textSize="12sp"
+                                    android:textColor="#718096" />
+
+                                <TextView
+                                    android:id="@+id/tvReservaId"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Reserva: 67890"
+                                    android:textSize="12sp"
+                                    android:textColor="#2D3748"
+                                    android:textStyle="bold" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginBottom="4dp">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Fecha:"
+                                    android:textSize="12sp"
+                                    android:textColor="#718096" />
+
+                                <TextView
+                                    android:id="@+id/tvFechaEmision"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="15/01/2024 10:30"
+                                    android:textSize="12sp"
+                                    android:textColor="#2D3748"
+                                    android:textStyle="bold" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Estado:"
+                                    android:textSize="12sp"
+                                    android:textColor="#718096" />
+
+                                <TextView
+                                    android:id="@+id/tvEstadoBoleto"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="EMITIDO"
+                                    android:textSize="12sp"
+                                    android:textColor="#38A169"
+                                    android:textStyle="bold" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <!-- Lado derecho - QR y código de barras -->
+                        <LinearLayout
+                            android:layout_width="80dp"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:gravity="center">
+
+                            <!-- QR Code simulado -->
+                            <TextView
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:text="⬛⬜⬛\n⬜⬛⬜\n⬛⬜⬛"
+                                android:textSize="8sp"
+                                android:textColor="#000000"
+                                android:gravity="center"
+                                android:background="#FFFFFF"
+                                android:layout_marginBottom="16dp" />
+
+                            <!-- Código de barras horizontal -->
+                            <TextView
+                                android:id="@+id/tvCodigoBarras"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="||||| |||| ||||| |||| |||||"
+                                android:textSize="6sp"
+                                android:textColor="#000000"
+                                android:rotation="90"
+                                android:gravity="center" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <!-- Línea de perforación simulada -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="#E2E8F0"
+                        android:layout_marginHorizontal="20dp" />
+
+                    <!-- Parte inferior del boleto -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:background="#F8F9FA"
+                        android:gravity="center"
+                        android:paddingHorizontal="20dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="⭐⭐⭐⭐⭐⭐⭐"
+                            android:textSize="12sp"
+                            android:textColor="#718096" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Botones de acción -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/btnDescargarPDF"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginBottom="12dp"
+                    android:text="📄 DESCARGAR BOARDING PASS"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#FFFFFF"
+                    android:background="@drawable/button_scan_background"
+                    android:elevation="4dp" />
+
+                <Button
+                    android:id="@+id/btnVolver"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="🔙 VOLVER"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#4A5568"
+                    android:background="@android:color/transparent"
+                    android:elevation="0dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>
