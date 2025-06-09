@@ -8,172 +8,205 @@
     app:cardElevation="4dp"
     app:cardBackgroundColor="#FFFFFF">
 
+    <!-- Header azul -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:orientation="vertical">
 
-        <!-- Header del vuelo -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_height="48dp"
+            android:background="#081420"
             android:gravity="center_vertical"
-            android:layout_marginBottom="12dp">
-
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_flight"
+                android:scaleType="centerInside"
+                android:adjustViewBounds="true"
+                android:paddingEnd="8dp"
+                android:tint="#FFFFFF" />
+            
             <TextView
-                android:id="@+id/tvDestino"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Aeropuerto Internacional Benito Juárez"
+
+                android:text="XPECTRUM"
+                android:textColor="#FFFFFF"
                 android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="#2D3748" />
-
-            <TextView
-                android:id="@+id/tvTipoViaje"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="👤 SOLO"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:textColor="#38A169"
-                android:background="#F0FFF4"
-                android:paddingHorizontal="8dp"
-                android:paddingVertical="4dp"
-                android:layout_marginStart="8dp" />
-
+                android:textStyle="bold"/>
+            
         </LinearLayout>
 
-        <!-- Información de fecha y clase -->
+        <!-- Contenido principal -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="12dp">
+            android:orientation="vertical"
+            android:padding="16dp">
 
-            <TextView
-                android:id="@+id/tvFechaViaje"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="01/06/25"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:textColor="#4A5568" />
-
-            <TextView
-                android:id="@+id/tvClase"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Clase Económica"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:textColor="#4A5568"
-                android:textAlignment="textEnd" />
-
-        </LinearLayout>
-
-        <!-- Información de precios -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <!-- Precio USD -->
+            <!-- Header del vuelo -->
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="12dp">
+
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/tvDestino"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Precio USD"
-                    android:textSize="12sp"
-                    android:textColor="#718096"
-                    android:layout_marginBottom="4dp" />
-
-                <TextView
-                    android:id="@+id/tvPrecioUsd"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="$0.00"
+                    android:layout_weight="1"
+                    android:text="Aeropuerto Internacional Benito Juárez"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:textColor="#2D3748" />
 
-            </LinearLayout>
-
-            <!-- Precio PEN -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="end">
-
                 <TextView
+                    android:id="@+id/tvTipoViaje"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="recio PEN"
+                    android:text="👤 SOLO"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="#38A169"
+                    android:background="#F0FFF4"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="4dp"
+                    android:layout_marginStart="8dp" />
+
+            </LinearLayout>
+
+            <!-- Información de fecha y clase -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:id="@+id/tvFechaViaje"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="01/06/25"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="#4A5568" />
+
+                <TextView
+                    android:id="@+id/tvClase"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Clase Económica"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="#4A5568"
+                    android:textAlignment="textEnd" />
+
+            </LinearLayout>
+
+            <!-- Información de precios -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <!-- Precio USD -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Precio USD"
+                        android:textSize="12sp"
+                        android:textColor="#718096"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:id="@+id/tvPrecioUsd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="$0.00"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="#2D3748" />
+
+                </LinearLayout>
+
+                <!-- Precio PEN -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="end">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="recio PEN"
+                        android:textSize="12sp"
+                        android:textColor="#718096"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:id="@+id/tvPrecioPen"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="S/0.00"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="#2D3748" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Información adicional -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#E2E8F0"
+                android:layout_marginVertical="12dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvBeneficio"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Sin beneficios"
+                    android:textSize="12sp"
+                    android:textColor="#718096" />
+
+                <TextView
+                    android:id="@+id/tvTasas"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Tasas incluidas"
                     android:textSize="12sp"
                     android:textColor="#718096"
-                    android:layout_marginBottom="4dp" />
-
-                <TextView
-                    android:id="@+id/tvPrecioPen"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="S/0.00"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="#2D3748" />
+                    android:textAlignment="textEnd" />
 
             </LinearLayout>
 
         </LinearLayout>
-
-        <!-- Información adicional -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#E2E8F0"
-            android:layout_marginVertical="12dp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/tvBeneficio"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Sin beneficios"
-                android:textSize="12sp"
-                android:textColor="#718096" />
-
-            <TextView
-                android:id="@+id/tvTasas"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Tasas incluidas"
-                android:textSize="12sp"
-                android:textColor="#718096"
-                android:textAlignment="textEnd" />
-
-        </LinearLayout>
-
-
-
     </LinearLayout>
-
 </androidx.cardview.widget.CardView>
