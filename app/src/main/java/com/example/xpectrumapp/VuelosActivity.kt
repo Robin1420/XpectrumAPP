@@ -1,6 +1,7 @@
 package com.example.xpectrumapp
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -18,6 +19,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.xpectrumapp.logic.VueloResponse
 import com.example.xpectrumapp.logic.VuelosApiService
+
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -174,6 +176,8 @@ class VuelosActivity : AppCompatActivity() {
         progressBar.visibility = if (mostrar) View.VISIBLE else View.GONE
         btnEscanearQR.isEnabled = !mostrar
     }
+
+
 
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()

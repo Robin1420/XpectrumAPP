@@ -47,7 +47,7 @@
         <activity
             android:name=".QRScannerActivity"
             android:exported="false"
-            android:label="Escáner QR"
+            android:label="Escanear QR"
             android:theme="@style/Theme.XpectrumAPP"
             android:parentActivityName=".VuelosActivity">
             <meta-data
@@ -59,7 +59,7 @@
         <activity
             android:name=".BoletoDetailActivity"
             android:exported="false"
-            android:label="Detalle del Boleto"
+            android:label="Boarding Pass"
             android:theme="@style/Theme.XpectrumAPP"
             android:parentActivityName=".QRScannerActivity">
             <meta-data
