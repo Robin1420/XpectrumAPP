@@ -27,11 +27,12 @@ class QRScannerActivity : AppCompatActivity() {
 
     companion object {
         private const val CAMERA_PERMISSION_REQUEST = 100
+        private const val REQUEST_CODE_PICK_IMAGE = 101
     }
 
     private lateinit var tvResultado: TextView
     private lateinit var btnEscanear: Button
-    private lateinit var btnVolver: Button
+    private lateinit var btnCargarQR: Button
     private lateinit var lectorQR: LectorQR
     private lateinit var vuelosApiService: VuelosApiService
     private var codigoVueloActual: String? = null
@@ -49,7 +50,7 @@ class QRScannerActivity : AppCompatActivity() {
 
             // Inicializar vistas
             btnEscanear = findViewById(R.id.btnEscanear)
-            btnVolver = findViewById(R.id.btnVolver)
+            btnCargarQR = findViewById(R.id.btnVolver)
             tvResultado = findViewById(R.id.tvResultado)
 
             // Inicializar lógica de negocio
@@ -112,8 +113,11 @@ class QRScannerActivity : AppCompatActivity() {
             }
         }
 
-        btnVolver.setOnClickListener {
-            finish()
+        btnCargarQR.setOnClickListener {
+            // Abrir galería para seleccionar imagen
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type = "image/*"
+            startActivityForResult(intent, REQUEST_CODE_PICK_IMAGE)
         }
     }
 
@@ -162,24 +166,58 @@ class QRScannerActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
-
-        if (result != null) {
-            if (result.contents != null) {
-                val codigoVuelo = result.contents.trim()
-                Log.d("QRScannerActivity", "Código de vuelo escaneado: $codigoVuelo")
-                
-                // Mostrar mensaje de carga
-                tvResultado.text = "🔍 Buscando información del vuelo $codigoVuelo..."
-                
-                // Buscar el vuelo por su código
-                buscarVueloPorCodigo(codigoVuelo)
-            } else {
-                Toast.makeText(this, "Escaneo cancelado", Toast.LENGTH_SHORT).show()
+        if (requestCode == REQUEST_CODE_PICK_IMAGE && resultCode == RESULT_OK && data != null) {
+            val imageUri = data.data
+            if (imageUri != null) {
+                // Procesar la imagen seleccionada en un hilo de fondo
+                CoroutineScope(Dispatchers.Main).launch {
+                    val qrContent = withContext(Dispatchers.IO) {
+                        decodeQRCodeFromImage(imageUri)
+                    }
+                    if (qrContent != null) {
+                        tvResultado.text = "🔍 Buscando información del vuelo $qrContent..."
+                        buscarVueloPorCodigo(qrContent)
+                    } else {
+                        Toast.makeText(this@QRScannerActivity, "No se detectó un QR en la imagen", Toast.LENGTH_LONG).show()
+                    }
+                }
             }
         } else {
-            super.onActivityResult(requestCode, resultCode, data)
+            val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
+            if (result != null) {
+                if (result.contents != null) {
+                    val codigoVuelo = result.contents.trim()
+                    Log.d("QRScannerActivity", "Código de vuelo escaneado: $codigoVuelo")
+                    tvResultado.text = "🔍 Buscando información del vuelo $codigoVuelo..."
+                    buscarVueloPorCodigo(codigoVuelo)
+                } else {
+                    Toast.makeText(this, "Escaneo cancelado", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                super.onActivityResult(requestCode, resultCode, data)
+            }
         }
+    }
+
+    // Decodifica el QR de una imagen seleccionada
+    private fun decodeQRCodeFromImage(imageUri: android.net.Uri): String? {
+        try {
+            val inputStream = contentResolver.openInputStream(imageUri)
+            val bitmap = android.graphics.BitmapFactory.decodeStream(inputStream)
+            inputStream?.close()
+            if (bitmap != null) {
+                val intArray = IntArray(bitmap.width * bitmap.height)
+                bitmap.getPixels(intArray, 0, bitmap.width, 0, 0, bitmap.width, bitmap.height)
+                val source = com.google.zxing.RGBLuminanceSource(bitmap.width, bitmap.height, intArray)
+                val binaryBitmap = com.google.zxing.BinaryBitmap(com.google.zxing.common.HybridBinarizer(source))
+                val reader = com.google.zxing.MultiFormatReader()
+                val result = reader.decode(binaryBitmap)
+                return result.text
+            }
+        } catch (e: Exception) {
+            Log.e("QRScannerActivity", "Error al decodificar QR de imagen", e)
+        }
+        return null
     }
 
     private fun buscarVueloPorCodigo(codigoVuelo: String) {
