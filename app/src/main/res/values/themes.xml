@@ -19,4 +19,29 @@
         <item name="android:textColorSecondary">#757575</item>
         <item name="android:windowBackground">#FFFFFF</item>
     </style>
+
+    <!-- Tema para WelcomeActivity con solo la barra de acción oculta -->
+    <style name="Theme.XpectrumAPP.Welcome" parent="Theme.XpectrumAPP.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+
+    <!-- Tema para VuelosActivity -->
+    <style name="Theme.XpectrumAPP.Vuelos" parent="Theme.XpectrumAPP.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+        <item name="android:enforceNavigationBarContrast">false</item>
+        <item name="android:enforceStatusBarContrast">false</item>
+    </style>
 </resources>

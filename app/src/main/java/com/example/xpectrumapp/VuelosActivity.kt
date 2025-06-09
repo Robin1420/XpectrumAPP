@@ -4,13 +4,18 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.WindowManager
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.xpectrumapp.logic.VueloResponse
 import com.example.xpectrumapp.logic.VuelosApiService
 import kotlinx.coroutines.CoroutineScope
@@ -28,14 +33,44 @@ class VuelosActivity : AppCompatActivity() {
     private lateinit var tvEstado: TextView
     private lateinit var vuelosAdapter: VuelosAdapter
     private lateinit var vuelosApiService: VuelosApiService
+    private lateinit var gifImageView: ImageView
+
+    init {
+        // Inicializar el adapter con una lista vacía
+        vuelosAdapter = VuelosAdapter(emptyList()) { vuelo ->
+            // Cuando se hace click en un vuelo, ir al escáner QR con la información
+            val intent = Intent(this, QRScannerActivity::class.java).apply {
+                putExtra("DESTINO", vuelo.aeropuertoDestino)
+                putExtra("FECHA_VIAJE", "${vuelo.fechaSalida} ${vuelo.horaSalida}")
+                putExtra("TIPO_VIAJE", vuelo.tipoViaje)
+                putExtra("CLASE", vuelo.clase)
+                putExtra("PRECIO_USD", vuelo.precioUSD)
+                putExtra("PRECIO_PEN", vuelo.precioPEN)
+            }
+            startActivity(intent)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_vuelos)
 
-        // Configurar ActionBar
-        supportActionBar?.title = "Vuelos Programados"
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        // Configurar la ventana para mostrar la barra de estado y navegación
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+        
+        // Configurar colores de las barras del sistema
+        window.statusBarColor = android.graphics.Color.TRANSPARENT
+        window.navigationBarColor = android.graphics.Color.TRANSPARENT
+        
+        // Configurar el comportamiento de las barras del sistema
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        
+        // Asegurar que el contenido no se dibuje detrás de las barras del sistema
+        window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+        
+        setContentView(R.layout.activity_vuelos)
+        
+        // Ocultar ActionBar
+        supportActionBar?.hide()
 
         // Inicializar vistas
         initViews()
@@ -58,32 +93,28 @@ class VuelosActivity : AppCompatActivity() {
         btnEscanearQR = findViewById(R.id.btnEscanearQR)
         progressBar = findViewById(R.id.progressBar)
         tvEstado = findViewById(R.id.tvEstado)
+        gifImageView = findViewById(R.id.gifImageView)
     }
 
     private fun setupRecyclerView() {
-        vuelosAdapter = VuelosAdapter(emptyList()) { vuelo ->
-            // Cuando se hace click en un vuelo, ir al escáner QR con la información
-            val intent = Intent(this, QRScannerActivity::class.java).apply {
-                putExtra("DESTINO", vuelo.destino)
-                putExtra("FECHA_VIAJE", vuelo.fecha_viaje)
-                putExtra("TIPO_VIAJE", vuelo.tipo_viaje)
-                putExtra("CLASE", vuelo.clase ?: "No especificada")
-                putExtra("PRECIO_USD", vuelo.precio_usd)
-                putExtra("PRECIO_PEN", vuelo.precio_pen)
-            }
-            startActivity(intent)
-        }
         recyclerVuelos.layoutManager = LinearLayoutManager(this)
         recyclerVuelos.adapter = vuelosAdapter
     }
 
     private fun setupApi() {
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://www.apiswagger.somee.com/api/")
+            .baseUrl("http://apiswagger.somee.com/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
         vuelosApiService = retrofit.create(VuelosApiService::class.java)
+        
+        // Cargar GIF usando Glide
+        Glide.with(this)
+            .asGif()
+            .load(R.drawable.gif_vuelos) // Asegúrate de tener un GIF llamado gif_vuelos en tu carpeta drawable
+            .apply(RequestOptions.centerCropTransform())
+            .into(gifImageView)
     }
 
     private fun setupClickListeners() {
@@ -99,7 +130,7 @@ class VuelosActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.Main).launch {
             try {
                 val response = withContext(Dispatchers.IO) {
-                    vuelosApiService.obtenerVuelosProgramados("programado")
+                    vuelosApiService.obtenerVuelosProgramados()
                 }
 
                 if (response.isSuccessful) {

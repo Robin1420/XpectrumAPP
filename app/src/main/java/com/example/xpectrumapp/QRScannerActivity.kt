@@ -11,20 +11,30 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.example.xpectrumapp.logic.BoletoResponse
 import com.example.xpectrumapp.logic.LectorQR
+import com.example.xpectrumapp.logic.VueloResponse
+import com.example.xpectrumapp.logic.VuelosApiService
+import com.google.gson.GsonBuilder
 import com.google.zxing.integration.android.IntentIntegrator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class QRScannerActivity : AppCompatActivity() {
 
-    private lateinit var lectorQR: LectorQR
+    companion object {
+        private const val CAMERA_PERMISSION_REQUEST = 100
+    }
+
+    private lateinit var tvResultado: TextView
     private lateinit var btnEscanear: Button
     private lateinit var btnVolver: Button
-    private lateinit var tvResultado: TextView
+    private lateinit var lectorQR: LectorQR
+    private lateinit var vuelosApiService: VuelosApiService
+    private var codigoVueloActual: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +54,13 @@ class QRScannerActivity : AppCompatActivity() {
 
             // Inicializar lógica de negocio
             lectorQR = LectorQR()
+
+            // Configurar API
+            val retrofit = Retrofit.Builder()
+                .baseUrl("http://apiswagger.somee.com/api/")
+                .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
+                .build()
+            vuelosApiService = retrofit.create(VuelosApiService::class.java)
 
             // Configurar botones
             setupClickListeners()
@@ -149,14 +166,14 @@ class QRScannerActivity : AppCompatActivity() {
 
         if (result != null) {
             if (result.contents != null) {
-                val codigoQR = result.contents
-                Log.d("QRScannerActivity", "Código QR escaneado: $codigoQR")
-
+                val codigoVuelo = result.contents.trim()
+                Log.d("QRScannerActivity", "Código de vuelo escaneado: $codigoVuelo")
+                
                 // Mostrar mensaje de carga
-                tvResultado.text = "📱 Código escaneado: $codigoQR\n\n🔍 Consultando información del boleto..."
-
-                // Consultar la API con el código
-                consultarAPI(codigoQR)
+                tvResultado.text = "🔍 Buscando información del vuelo $codigoVuelo..."
+                
+                // Buscar el vuelo por su código
+                buscarVueloPorCodigo(codigoVuelo)
             } else {
                 Toast.makeText(this, "Escaneo cancelado", Toast.LENGTH_SHORT).show()
             }
@@ -165,59 +182,42 @@ class QRScannerActivity : AppCompatActivity() {
         }
     }
 
-    private fun consultarAPI(codigo: String) {
+    private fun buscarVueloPorCodigo(codigoVuelo: String) {
         CoroutineScope(Dispatchers.Main).launch {
             try {
-                val boleto = withContext(Dispatchers.IO) {
-                    lectorQR.consultarCodigoQR(codigo)
+                val response = withContext(Dispatchers.IO) {
+                    vuelosApiService.obtenerVueloPorCodigo(codigoVuelo)
                 }
 
-                if (boleto != null) {
-                    // Navegar a la nueva pantalla de detalle del boleto
-                    navegarADetalleBoleto(boleto)
+                if (response.isSuccessful) {
+                    val vuelo = response.body()
+                    if (vuelo != null) {
+                        // Navegar a la pantalla de detalle del boleto con la información del vuelo
+                        val intent = Intent(this@QRScannerActivity, BoletoDetailActivity::class.java).apply {
+                            putExtra("VUELO_CODIGO", vuelo.codigoVuelo)
+                            putExtra("DESTINO", vuelo.aeropuertoDestino)
+                            putExtra("CIUDAD_DESTINO", vuelo.ciudadDestino)
+                            putExtra("FECHA_SALIDA", "${vuelo.fechaSalida} ${vuelo.horaSalida}")
+                            putExtra("FECHA_LLEGADA", "${vuelo.fechaLlegada} ${vuelo.horaLlegada}")
+                            putExtra("TIPO_VIAJE", vuelo.tipoViaje)
+                            putExtra("CLASE", vuelo.clase)
+                            putExtra("PRECIO_USD", vuelo.precioUSD)
+                            putExtra("PRECIO_PEN", vuelo.precioPEN)
+                            putExtra("AERONAVE", "${vuelo.aeronaveModelo} (${vuelo.aeronaveCapacidad} pasajeros)")
+                            putExtra("ESTADO", vuelo.estadoVuelo)
+                        }
+                        startActivity(intent)
+                    } else {
+                        tvResultado.text = "❌ No se encontró información para el vuelo $codigoVuelo"
+                    }
                 } else {
-                    tvResultado.text = """
-                        ❌ BOLETO NO ENCONTRADO
-                        
-                        📱 Código escaneado: $codigo
-                        
-                        ⚠️ El código QR no corresponde a ningún boleto válido en el sistema.
-                        
-                        💡 Presiona SCAN para intentar nuevamente.
-                    """.trimIndent()
+                    tvResultado.text = "❌ Error al buscar el vuelo: ${response.code()}"
+                    Log.e("QRScannerActivity", "Error HTTP: ${response.code()}")
                 }
             } catch (e: Exception) {
-                Log.e("QRScannerActivity", "Error en consultarAPI", e)
-                tvResultado.text = """
-                    ❌ ERROR DE CONEXIÓN
-                    
-                    📱 Código escaneado: $codigo
-                    
-                    🚫 Error: ${e.message}
-                    
-                    🔄 Verifica tu conexión a internet e intenta nuevamente.
-                """.trimIndent()
+                Log.e("QRScannerActivity", "Error al buscar vuelo", e)
+                tvResultado.text = "❌ Error de conexión: ${e.message}"
             }
         }
-    }
-
-    private fun navegarADetalleBoleto(boleto: BoletoResponse) {
-        val intent = Intent(this, BoletoDetailActivity::class.java).apply {
-            putExtra("CODIGO_BOLETO", boleto.codigoboleto)
-            putExtra("BOLETO_ID", boleto.boletoid)
-            putExtra("RESERVA_ID", boleto.reservaid)
-            putExtra("FECHA_EMISION", boleto.fechaemision)
-            putExtra("ESTADO_BOLETO", boleto.estadoboleto)
-        }
-        startActivity(intent)
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        finish()
-        return true
-    }
-
-    companion object {
-        private const val CAMERA_PERMISSION_REQUEST = 100
     }
 }

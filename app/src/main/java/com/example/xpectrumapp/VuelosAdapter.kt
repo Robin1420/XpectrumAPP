@@ -33,24 +33,23 @@ class VuelosAdapter(
         val vuelo = vuelos[position]
 
         // Información del vuelo
-        holder.tvDestino.text = vuelo.destino
-        holder.tvTipoViaje.text = "👤 ${vuelo.tipo_viaje.trim().uppercase()}"
-        holder.tvFechaViaje.text = "📅 ${vuelo.fecha_viaje}"
+        holder.tvDestino.text = vuelo.aeropuertoDestino
+        holder.tvTipoViaje.text = "👤 ${vuelo.tipoViaje.trim().uppercase()}"
+        holder.tvFechaViaje.text = "${vuelo.fechaSalida} ${vuelo.horaSalida}"
 
         // Clase del vuelo
-        val claseTexto = vuelo.clase?.takeIf { it.isNotBlank() } ?: "No especificada"
-        holder.tvClase.text = "🎫 $claseTexto"
+        holder.tvClase.text = "${vuelo.clase}"
 
         // Precios
-        holder.tvPrecioUsd.text = "$${String.format("%.2f", vuelo.precio_usd)}"
-        holder.tvPrecioPen.text = "S/${String.format("%.2f", vuelo.precio_pen)}"
+        holder.tvPrecioUsd.text = "$${String.format("%.2f", vuelo.precioUSD)}"
+        holder.tvPrecioPen.text = "S/${String.format("%.2f", vuelo.precioPEN)}"
 
         // Beneficios
         val beneficioTexto = vuelo.beneficio?.takeIf { it.isNotBlank() } ?: "Sin beneficios"
-        holder.tvBeneficio.text = "🎁 $beneficioTexto"
+        holder.tvBeneficio.text = "$beneficioTexto"
 
-        // Tasas
-        holder.tvTasas.text = "📋 ${vuelo.tasas_incluidas}"
+        // Información adicional
+        holder.tvTasas.text = "${vuelo.aeronaveModelo} (${vuelo.aeronaveCapacidad} pasajeros)"
 
         // Click listener para navegar al escáner QR
         holder.itemView.setOnClickListener {

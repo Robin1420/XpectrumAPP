@@ -2,6 +2,7 @@ package com.example.xpectrumapp
 
 import android.Manifest
 import android.content.ContentValues
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Canvas
 import android.graphics.Color
@@ -21,7 +22,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.example.xpectrumapp.logic.BoletoResponse
 import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
@@ -29,17 +29,34 @@ import java.util.*
 
 class BoletoDetailActivity : AppCompatActivity() {
 
+    // Views
     private lateinit var boletoContainer: View
-    private lateinit var tvCodigoBoleto: TextView
-    private lateinit var tvBoletoId: TextView
-    private lateinit var tvReservaId: TextView
-    private lateinit var tvFechaEmision: TextView
-    private lateinit var tvEstadoBoleto: TextView
-    private lateinit var tvCodigoBarras: TextView
+    private lateinit var tvCodigoVuelo: TextView
+    private lateinit var tvDestino: TextView
+    private lateinit var tvCiudadDestino: TextView
+    private lateinit var tvFechaSalida: TextView
+    private lateinit var tvFechaLlegada: TextView
+    private lateinit var tvTipoViaje: TextView
+    private lateinit var tvClase: TextView
+    private lateinit var tvPrecioUSD: TextView
+    private lateinit var tvPrecioPEN: TextView
+    private lateinit var tvAeronave: TextView
+    private lateinit var tvEstadoVuelo: TextView
     private lateinit var btnDescargarPDF: Button
     private lateinit var btnVolver: Button
-
-    private var boletoData: BoletoResponse? = null
+    
+    // Datos del vuelo
+    private var codigoVuelo: String = ""
+    private var destino: String = ""
+    private var ciudadDestino: String = ""
+    private var fechaSalida: String = ""
+    private var fechaLlegada: String = ""
+    private var tipoViaje: String = ""
+    private var clase: String = ""
+    private var precioUSD: Double = 0.0
+    private var precioPEN: Double = 0.0
+    private var aeronave: String = ""
+    private var estadoVuelo: String = ""
 
     companion object {
         private const val STORAGE_PERMISSION_REQUEST = 101
@@ -51,22 +68,27 @@ class BoletoDetailActivity : AppCompatActivity() {
         setContentView(R.layout.activity_boleto_detail)
 
         // Configurar ActionBar
-        supportActionBar?.title = "Detalle del Boleto"
+        supportActionBar?.title = "Detalle del Vuelo"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         initViews()
         setupClickListeners()
-        loadBoletoData()
+        loadVueloData()
     }
 
     private fun initViews() {
         boletoContainer = findViewById(R.id.boletoContainer)
-        tvCodigoBoleto = findViewById(R.id.tvCodigoBoleto)
-        tvBoletoId = findViewById(R.id.tvBoletoId)
-        tvReservaId = findViewById(R.id.tvReservaId)
-        tvFechaEmision = findViewById(R.id.tvFechaEmision)
-        tvEstadoBoleto = findViewById(R.id.tvEstadoBoleto)
-        tvCodigoBarras = findViewById(R.id.tvCodigoBarras)
+        tvCodigoVuelo = findViewById(R.id.tvCodigoVuelo)
+        tvDestino = findViewById(R.id.tvDestino)
+        tvCiudadDestino = findViewById(R.id.tvCiudadDestino)
+        tvFechaSalida = findViewById(R.id.tvFechaSalida)
+        tvFechaLlegada = findViewById(R.id.tvFechaLlegada)
+        tvTipoViaje = findViewById(R.id.tvTipoViaje)
+        tvClase = findViewById(R.id.tvClase)
+        tvPrecioUSD = findViewById(R.id.tvPrecioUSD)
+        tvPrecioPEN = findViewById(R.id.tvPrecioPEN)
+        tvAeronave = findViewById(R.id.tvAeronave)
+        tvEstadoVuelo = findViewById(R.id.tvEstadoVuelo)
         btnDescargarPDF = findViewById(R.id.btnDescargarPDF)
         btnVolver = findViewById(R.id.btnVolver)
     }
@@ -85,53 +107,53 @@ class BoletoDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadBoletoData() {
+    private fun loadVueloData() {
         // Obtener datos del intent
-        val codigoBoleto = intent.getStringExtra("CODIGO_BOLETO") ?: ""
-        val boletoId = intent.getIntExtra("BOLETO_ID", 0)
-        val reservaId = intent.getIntExtra("RESERVA_ID", 0)
-        val fechaEmision = intent.getStringExtra("FECHA_EMISION") ?: ""
-        val estadoBoleto = intent.getStringExtra("ESTADO_BOLETO") ?: ""
-
-        // Crear objeto BoletoResponse
-        boletoData = BoletoResponse(
-            boletoid = boletoId,
-            reservaid = reservaId,
-            codigoboleto = codigoBoleto,
-            fechaemision = fechaEmision,
-            estadoboleto = estadoBoleto,
-            reserva = null,
-            checkins = null
-        )
+        codigoVuelo = intent.getStringExtra("VUELO_CODIGO") ?: ""
+        destino = intent.getStringExtra("DESTINO") ?: ""
+        ciudadDestino = intent.getStringExtra("CIUDAD_DESTINO") ?: ""
+        fechaSalida = intent.getStringExtra("FECHA_SALIDA") ?: ""
+        fechaLlegada = intent.getStringExtra("FECHA_LLEGADA") ?: ""
+        tipoViaje = intent.getStringExtra("TIPO_VIAJE") ?: ""
+        clase = intent.getStringExtra("CLASE") ?: ""
+        precioUSD = intent.getDoubleExtra("PRECIO_USD", 0.0)
+        precioPEN = intent.getDoubleExtra("PRECIO_PEN", 0.0)
+        aeronave = intent.getStringExtra("AERONAVE") ?: ""
+        estadoVuelo = intent.getStringExtra("ESTADO") ?: ""
 
         // Mostrar datos en la UI
-        mostrarDatosBoleto()
+        mostrarDatosVuelo()
     }
 
-    private fun mostrarDatosBoleto() {
-        boletoData?.let { boleto ->
-            tvCodigoBoleto.text = boleto.codigoboleto
-            tvBoletoId.text = "ID: ${boleto.boletoid}"
-            tvReservaId.text = "Reserva: ${boleto.reservaid}"
+    private fun mostrarDatosVuelo() {
+        tvCodigoVuelo.text = "Vuelo: $codigoVuelo"
+        tvDestino.text = destino
+        tvCiudadDestino.text = ciudadDestino
+        tvFechaSalida.text = "Salida: $fechaSalida"
+        tvFechaLlegada.text = "Llegada: $fechaLlegada"
+        tvTipoViaje.text = "Tipo: ${tipoViaje.uppercase()}"
+        tvClase.text = "Clase: ${clase.uppercase()}"
+        tvPrecioUSD.text = "Precio USD: $${String.format("%.2f", precioUSD)}"
+        tvPrecioPEN.text = "Precio PEN: S/${String.format("%.2f", precioPEN)}"
+        tvAeronave.text = aeronave
+        tvEstadoVuelo.text = estadoVuelo.uppercase()
 
-            // Formatear fecha
-            val fechaFormateada = formatearFecha(boleto.fechaemision)
-            tvFechaEmision.text = fechaFormateada
-
-            tvEstadoBoleto.text = boleto.estadoboleto.uppercase()
-            tvCodigoBarras.text = "||||| |||| ||||| |||| |||||"
-
-            // Cambiar color según estado
-            when (boleto.estadoboleto.lowercase()) {
-                "emitido" -> {
-                    tvEstadoBoleto.setTextColor(ContextCompat.getColor(this, android.R.color.holo_green_dark))
-                }
-                "cancelado" -> {
-                    tvEstadoBoleto.setTextColor(ContextCompat.getColor(this, android.R.color.holo_red_dark))
-                }
-                else -> {
-                    tvEstadoBoleto.setTextColor(ContextCompat.getColor(this, android.R.color.holo_orange_dark))
-                }
+        // Cambiar color según estado
+        when (estadoVuelo.lowercase()) {
+            "programado" -> {
+                tvEstadoVuelo.setTextColor(ContextCompat.getColor(this, android.R.color.holo_blue_dark))
+            }
+            "en vuelo" -> {
+                tvEstadoVuelo.setTextColor(ContextCompat.getColor(this, android.R.color.holo_green_dark))
+            }
+            "aterrizado" -> {
+                tvEstadoVuelo.setTextColor(ContextCompat.getColor(this, android.R.color.holo_purple))
+            }
+            "cancelado" -> {
+                tvEstadoVuelo.setTextColor(ContextCompat.getColor(this, android.R.color.holo_red_dark))
+            }
+            else -> {
+                tvEstadoVuelo.setTextColor(ContextCompat.getColor(this, android.R.color.holo_orange_dark))
             }
         }
     }
@@ -178,12 +200,11 @@ class BoletoDetailActivity : AppCompatActivity() {
 
             val canvas = page.canvas
 
-            // Dibujar el boarding pass estilo VivaAir
             dibujarBoardingPassVivaAir(canvas)
 
             pdfDocument.finishPage(page)
 
-            val nombreArchivo = "BoardingPass_${boletoData?.codigoboleto}_${System.currentTimeMillis()}.pdf"
+            val nombreArchivo = "BoardingPass_${codigoVuelo}_${System.currentTimeMillis()}.pdf"
             val uri = guardarPDFEnDescargas(pdfDocument, nombreArchivo)
             pdfDocument.close()
 
@@ -201,167 +222,77 @@ class BoletoDetailActivity : AppCompatActivity() {
     }
 
     private fun dibujarBoardingPassVivaAir(canvas: Canvas) {
-        boletoData?.let { boleto ->
-            val paint = Paint().apply {
-                isAntiAlias = true
-            }
-
-            // === HEADER SUPERIOR ===
-            paint.color = Color.BLACK
-            paint.textSize = 12f
-            paint.textAlign = Paint.Align.LEFT
-            canvas.drawText(obtenerFechaActual(), 50f, 30f, paint)
-
-            paint.textAlign = Paint.Align.RIGHT
-            canvas.drawText("Pase de abordar en línea", 545f, 30f, paint)
-            paint.textAlign = Paint.Align.LEFT
-
-            // Texto informativo
-            paint.textSize = 10f
-            paint.color = Color.GRAY
-            canvas.drawText("Si viaja solo con equipaje de mano, vaya directamente a la sala de espera", 50f, 50f, paint)
-
-            // === BORDE PRINCIPAL DEL BOARDING PASS ===
-            paint.color = Color.BLACK
-            paint.style = Paint.Style.STROKE
-            paint.strokeWidth = 2f
-            canvas.drawRect(50f, 70f, 545f, 620f, paint)
-
-            // === HEADER CON LOGO Y TÍTULO ===
-            paint.style = Paint.Style.FILL
-
-            // Logo "Xpectrum"
-            paint.color = Color.parseColor("#E53E3E")
-            paint.textSize = 24f
-            paint.isFakeBoldText = true
-            canvas.drawText("Xpectrum", 70f, 110f, paint)
-
-            paint.textSize = 10f
-            paint.isFakeBoldText = false
-            canvas.drawText("Operated by Xpectrum Peru", 70f, 125f, paint)
-
-            // "Pase de abordar" en el lado derecho
-            paint.color = Color.BLACK
-            paint.textSize = 18f
-            paint.isFakeBoldText = true
-            paint.textAlign = Paint.Align.RIGHT
-            canvas.drawText("Pase de abordar", 525f, 110f, paint)
-
-            paint.textSize = 10f
-            paint.isFakeBoldText = false
-            canvas.drawText("Online boarding pass", 525f, 125f, paint)
-            paint.textAlign = Paint.Align.LEFT
-
-            // === INFORMACIÓN DEL PASAJERO ===
-            paint.color = Color.BLACK
-            paint.textSize = 10f
-            canvas.drawText("Nombre del pasajero/Name of passenger", 70f, 155f, paint)
-
-            paint.textSize = 14f
-            paint.isFakeBoldText = true
-            canvas.drawText("PASAJERO/PASSENGER NAME", 70f, 175f, paint)
-
-            // === INFORMACIÓN DEL VUELO ===
-            paint.textSize = 10f
-            paint.isFakeBoldText = false
-            canvas.drawText("Vuelo No./Flight no.", 70f, 200f, paint)
-            canvas.drawText("Grupo/Group", 170f, 200f, paint)
-            canvas.drawText("Asiento/Seat", 250f, 200f, paint)
-
-            paint.textSize = 20f
-            paint.isFakeBoldText = true
-            canvas.drawText("XP ${boleto.boletoid}", 70f, 225f, paint)
-            canvas.drawText("4", 170f, 225f, paint)
-            canvas.drawText("9B", 250f, 225f, paint)
-
-            // === CÓDIGOS DE AEROPUERTOS ===
-            paint.textSize = 40f
-            paint.isFakeBoldText = true
-            canvas.drawText("LIM", 420f, 200f, paint)
-            paint.textSize = 10f
-            paint.isFakeBoldText = false
-            canvas.drawText("Lima - Jorge Chavez (LIM)", 420f, 215f, paint)
-
-            // === CÓDIGO DE RESERVA ===
-            paint.textSize = 10f
-            canvas.drawText("Código de reserva/Booking number: ${boleto.codigoboleto}", 70f, 250f, paint)
-
-            // === CÓDIGO DE BARRAS ===
-            dibujarCodigoBarras(canvas, 70f, 260f, 200f, 30f)
-
-            // === FECHA Y HORA ===
-            paint.textSize = 24f
-            paint.isFakeBoldText = true
-            canvas.drawText("15 jul 17", 380f, 280f, paint)
-
-            paint.textSize = 10f
-            paint.isFakeBoldText = false
-            canvas.drawText("Hora estimada/Boarding time", 380f, 295f, paint)
-            canvas.drawText("13:05", 420f, 310f, paint)
-
-            // === INFORMACIÓN ADICIONAL ===
-            paint.textSize = 8f
-            paint.color = Color.GRAY
-
-            var yPos = 340f
-            val lineHeight = 10f
-
-            canvas.drawText("Recuerde que el artículo personal permitido sin costo por Xpectrum es una única pieza", 70f, yPos, paint)
-            yPos += lineHeight
-            canvas.drawText("de máximo 6 kg y 40x30x25 cm. Exceder las medidas y peso permitido tendrá un costo adicional.", 70f, yPos, paint)
-            yPos += lineHeight * 1.5f
-
-            canvas.drawText("Acérquese al counter, para reclamar el pase de abordar y entregar el equipaje, está disponible", 70f, yPos, paint)
-            yPos += lineHeight
-            canvas.drawText("entre 2 horas y 45 minutos antes de la salida programada para vuelos nacionales.", 70f, yPos, paint)
-            yPos += lineHeight * 1.5f
-
-            canvas.drawText("El equipaje de cabina, y en general cualquier pieza, que exceda los 55x40x25 cm y 12 kg,", 70f, yPos, paint)
-            yPos += lineHeight
-            canvas.drawText("deberá ser entregado en el counter de Xpectrum antes de ingresar a la espera.", 70f, yPos, paint)
-
-            // === HASHTAG ===
-            paint.textSize = 12f
-            paint.color = Color.BLACK
-            paint.textAlign = Paint.Align.CENTER
-            canvas.drawText("#YoSoyXpectrum", 297f, 430f, paint)
-            paint.textAlign = Paint.Align.LEFT
-
-            // === LÍNEA PUNTEADA DE SEPARACIÓN ===
-            dibujarLineaPunteada(canvas, 70f, 450f, 525f, 450f)
-
-            // === SECCIÓN INFERIOR DESPRENDIBLE ===
-            paint.color = Color.BLACK
-            paint.textSize = 12f
-            paint.isFakeBoldText = true
-            canvas.drawText("PASAJERO/PASSENGER NAME", 70f, 475f, paint)
-            canvas.drawText("Código: ${boleto.codigoboleto}", 300f, 475f, paint)
-
-            // Código de barras inferior
-            dibujarCodigoBarras(canvas, 350f, 480f, 150f, 20f)
-
-            // Información del vuelo inferior - HEADERS
-            paint.textSize = 8f
-            paint.isFakeBoldText = false
-            paint.color = Color.GRAY
-            canvas.drawText("Fecha/Date", 70f, 515f, paint)
-            canvas.drawText("Vuelo/Flight", 130f, 515f, paint)
-            canvas.drawText("From/To", 190f, 515f, paint)
-            canvas.drawText("Seq. No.", 250f, 515f, paint)
-            canvas.drawText("Grupo/Group", 310f, 515f, paint)
-            canvas.drawText("Seat", 370f, 515f, paint)
-
-            // Información del vuelo inferior - VALORES
-            paint.textSize = 10f
-            paint.isFakeBoldText = true
-            paint.color = Color.BLACK
-            canvas.drawText("15 jul. 17", 70f, 530f, paint)
-            canvas.drawText("XP ${boleto.boletoid}", 130f, 530f, paint)
-            canvas.drawText("LIM/AQP", 190f, 530f, paint)
-            canvas.drawText("13", 250f, 530f, paint)
-            canvas.drawText("4", 310f, 530f, paint)
-            canvas.drawText("9B", 370f, 530f, paint)
+        val paint = Paint().apply {
+            isAntiAlias = true
+            style = Paint.Style.FILL
         }
+
+        // Fondo
+        paint.color = Color.WHITE
+        canvas.drawRect(0f, 0f, canvas.width.toFloat(), canvas.height.toFloat(), paint)
+
+        // Encabezado - Logo y título
+        paint.color = Color.parseColor("#FF0000") // Rojo VivaAir
+        paint.textSize = 24f
+        paint.textAlign = Paint.Align.CENTER
+        canvas.drawText("Xpectrum Airlines", canvas.width / 2f, 50f, paint)
+        paint.textSize = 18f
+        canvas.drawText("BOARDING PASS", canvas.width / 2f, 80f, paint)
+
+        // Información del vuelo
+        paint.textAlign = Paint.Align.LEFT
+        paint.color = Color.BLACK
+        paint.textSize = 14f
+        
+        var yPos = 130f
+        val lineHeight = 30f
+        
+        canvas.drawText("Vuelo: $codigoVuelo", 50f, yPos, paint)
+        yPos += lineHeight
+        canvas.drawText("Destino: $destino, $ciudadDestino", 50f, yPos, paint)
+        yPos += lineHeight
+        canvas.drawText("Salida: $fechaSalida", 50f, yPos, paint)
+        yPos += lineHeight
+        canvas.drawText("Llegada: $fechaLlegada", 50f, yPos, paint)
+        yPos += lineHeight
+        canvas.drawText("Tipo: ${tipoViaje.uppercase()}", 50f, yPos, paint)
+        yPos += lineHeight
+        canvas.drawText("Clase: ${clase.uppercase()}", 50f, yPos, paint)
+        yPos += lineHeight
+        canvas.drawText("Precio USD: $${String.format("%.2f", precioUSD)}", 50f, yPos, paint)
+        yPos += lineHeight
+        canvas.drawText("Precio PEN: S/${String.format("%.2f", precioPEN)}", 50f, yPos, paint)
+        yPos += lineHeight
+        canvas.drawText("Aeronave: $aeronave", 50f, yPos, paint)
+        yPos += lineHeight
+        
+        // Estado
+        paint.color = when (estadoVuelo.lowercase()) {
+            "programado" -> Color.BLUE
+            "en vuelo" -> Color.GREEN
+            "aterrizado" -> Color.MAGENTA
+            "cancelado" -> Color.RED
+            else -> Color.DKGRAY
+        }
+        canvas.drawText("Estado: ${estadoVuelo.uppercase()}", 50f, yPos, paint)
+        
+        // Código de barras simulado
+        yPos += lineHeight * 2
+        paint.color = Color.BLACK
+        paint.textSize = 12f
+        canvas.drawText("Código de barras:", 50f, yPos, paint)
+        yPos += 20f
+        paint.textSize = 20f
+        canvas.drawText("||||| |||| ||||| |||| |||||", 50f, yPos, paint)
+        
+        // Pie de página
+        yPos = canvas.height - 50f
+        paint.color = Color.GRAY
+        paint.textSize = 10f
+        paint.textAlign = Paint.Align.CENTER
+        canvas.drawText("Gracias por volar con Xpectrum Airlines", canvas.width / 2f, yPos, paint)
+        yPos += 15f
+        canvas.drawText("Para cualquier consulta, contacte a soporte@xpectrum.com", canvas.width / 2f, yPos, paint)
     }
 
     private fun dibujarCodigoBarras(canvas: Canvas, x: Float, y: Float, width: Float, height: Float) {

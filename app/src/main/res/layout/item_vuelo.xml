@@ -60,7 +60,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="📅 01/06/25"
+                android:text="01/06/25"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:textColor="#4A5568" />
@@ -70,7 +70,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="🎫 Clase Económica"
+                android:text="Clase Económica"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:textColor="#4A5568"
@@ -94,7 +94,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="💵 Precio USD"
+                    android:text="Precio USD"
                     android:textSize="12sp"
                     android:textColor="#718096"
                     android:layout_marginBottom="4dp" />
@@ -121,7 +121,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="💰 Precio PEN"
+                    android:text="recio PEN"
                     android:textSize="12sp"
                     android:textColor="#718096"
                     android:layout_marginBottom="4dp" />
@@ -156,7 +156,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="🎁 Sin beneficios"
+                android:text="Sin beneficios"
                 android:textSize="12sp"
                 android:textColor="#718096" />
 
@@ -165,23 +165,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="📋 Tasas incluidas"
+                android:text="Tasas incluidas"
                 android:textSize="12sp"
                 android:textColor="#718096"
                 android:textAlignment="textEnd" />
 
         </LinearLayout>
 
-        <!-- Indicador de acción -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="👆 Toca para escanear boleto"
-            android:textSize="11sp"
-            android:textColor="#A0AEC0"
-            android:textStyle="italic"
-            android:gravity="center"
-            android:layout_marginTop="8dp" />
+
 
     </LinearLayout>
 

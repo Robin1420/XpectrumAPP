@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("kotlin-kapt")
 }
 
 android {
@@ -14,8 +15,10 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        
+        // Enable vector drawables
+        vectorDrawables.useSupportLibrary = true
     }
 
     buildTypes {
@@ -36,6 +39,10 @@ android {
     }
     buildFeatures {
         compose = true
+        viewBinding = true
+        dataBinding {
+            isEnabled = true
+        }
     }
 }
 
@@ -74,4 +81,19 @@ dependencies {
 
     // Para corrutinas
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+
+    // Para manejar GIFs
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    kapt("com.github.bumptech.glide:compiler:4.16.0")
+    
+    // Material Components
+    implementation("com.google.android.material:material:1.11.0")
+    
+    // AndroidX VectorDrawable
+    implementation("androidx.vectordrawable:vectordrawable:1.1.0")
+    implementation("androidx.vectordrawable:vectordrawable-animated:1.1.0")
+    
+    // AndroidX AppCompat for vector drawable support
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("androidx.appcompat:appcompat-resources:1.6.1")
 }

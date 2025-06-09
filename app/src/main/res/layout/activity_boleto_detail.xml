@@ -18,7 +18,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Detalle del Boleto"
+            android:text="Detalle del Vuelo"
             android:textSize="24sp"
             android:textStyle="bold"
             android:textColor="#FFFFFF"
@@ -27,9 +27,8 @@
         <TextView
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:text="🎫"
+            android:text="✈️"
             android:textSize="20sp" />
-
     </LinearLayout>
 
     <!-- Contenido principal -->
@@ -133,15 +132,242 @@
 
                             <!-- Información del boleto -->
                             <TextView
-                                android:id="@+id/tvCodigoBoleto"
+                                android:id="@+id/tvCodigoVuelo"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="ABC123XYZ"
+                                android:text="Vuelo: ABC123"
                                 android:textSize="18sp"
                                 android:textStyle="bold"
                                 android:textColor="#2D3748"
                                 android:gravity="center"
                                 android:layout_marginBottom="8dp" />
+
+                            <TextView
+                                android:id="@+id/tvDestino"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Destino: Lima"
+                                android:textSize="16sp"
+                                android:textColor="#2D3748"
+                                android:gravity="center"
+                                android:layout_marginBottom="4dp" />
+
+                            <TextView
+                                android:id="@+id/tvCiudadDestino"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Ciudad: Lima, Perú"
+                                android:textSize="14sp"
+                                android:textColor="#4A5568"
+                                android:gravity="center"
+                                android:layout_marginBottom="8dp" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginBottom="4dp">
+
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Salida:"
+                                    android:textSize="12sp"
+                                    android:textColor="#718096"
+                                    android:gravity="end"
+                                    android:paddingEnd="8dp" />
+
+                                <TextView
+                                    android:id="@+id/tvFechaSalida"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="01/01/2023 10:00"
+                                    android:textSize="12sp"
+                                    android:textColor="#2D3748"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginBottom="4dp">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Llegada:"
+                                    android:textSize="12sp"
+                                    android:textColor="#718096"
+                                    android:gravity="end"
+                                    android:paddingEnd="8dp" />
+                                <TextView
+                                    android:id="@+id/tvFechaLlegada"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="01/01/2023 12:00"
+                                    android:textSize="12sp"
+                                    android:textColor="#2D3748"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginBottom="4dp">
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Tipo de Viaje:"
+                                    android:textSize="12sp"
+                                    android:textColor="#718096"
+                                    android:gravity="end"
+                                    android:paddingEnd="8dp" />
+                                <TextView
+                                    android:id="@+id/tvTipoViaje"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Ida y Vuelta"
+                                    android:textSize="12sp"
+                                    android:textColor="#2D3748"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginBottom="4dp">
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Clase:"
+                                    android:textSize="12sp"
+                                    android:textColor="#718096"
+                                    android:gravity="end"
+                                    android:paddingEnd="8dp" />
+                                <TextView
+                                    android:id="@+id/tvClase"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Económica"
+                                    android:textSize="12sp"
+                                    android:textColor="#2D3748"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginBottom="4dp">
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Precio (USD):"
+                                    android:textSize="12sp"
+                                    android:textColor="#718096"
+                                    android:gravity="end"
+                                    android:paddingEnd="8dp" />
+                                <TextView
+                                    android:id="@+id/tvPrecioUSD"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="$150.00"
+                                    android:textSize="12sp"
+                                    android:textColor="#2D3748"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginBottom="4dp">
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Precio (PEN):"
+                                    android:textSize="12sp"
+                                    android:textColor="#718096"
+                                    android:gravity="end"
+                                    android:paddingEnd="8dp" />
+                                <TextView
+                                    android:id="@+id/tvPrecioPEN"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="S/600.00"
+                                    android:textSize="12sp"
+                                    android:textColor="#2D3748"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginBottom="8dp">
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Aeronave:"
+                                    android:textSize="12sp"
+                                    android:textColor="#718096"
+                                    android:gravity="end"
+                                    android:paddingEnd="8dp" />
+                                <TextView
+                                    android:id="@+id/tvAeronave"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Boeing 737-800"
+                                    android:textSize="12sp"
+                                    android:textColor="#2D3748"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:background="#E5F5E0"
+                                android:padding="8dp"
+                                android:layout_marginTop="8dp">
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Estado del Vuelo:"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="#2D3748"
+                                    android:gravity="end"
+                                    android:paddingEnd="8dp" />
+                                <TextView
+                                    android:id="@+id/tvEstadoVuelo"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Programado"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="#38A169" />
+                            </LinearLayout>
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -183,15 +409,7 @@
                                     android:textSize="12sp"
                                     android:textColor="#718096" />
 
-                                <TextView
-                                    android:id="@+id/tvReservaId"
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="Reserva: 67890"
-                                    android:textSize="12sp"
-                                    android:textColor="#2D3748"
-                                    android:textStyle="bold" />
+
 
                             </LinearLayout>
 

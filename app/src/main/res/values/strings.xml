@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">XpectrumAPP</string>
+    
+    <!-- Content Descriptions -->
+    <string name="ic_flight_desc">Flight icon</string>
+    <string name="ic_calendar_desc">Calendar icon</string>
+    <string name="ic_clock_desc">Clock icon</string>
 </resources>
